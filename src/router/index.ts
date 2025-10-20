@@ -8,13 +8,19 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: "movies",
-      component: MoviesView
+      name: 'movies',
+      component: MoviesView,
+      meta: {
+        title: 'Фильмы - Онлайн-бронирование кинотеатра',
+      },
     },
     {
       path: '/old-home',
       name: 'old-home',
       component: OldHomeView,
+      meta: {
+        title: 'sdafadsfа',
+      },
     },
     {
       path: '/test',
@@ -30,6 +36,11 @@ const router = createRouter({
       component: () => import('../views/old/AboutView.vue'),
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = (to.meta.title as string) ?? 'Онлайн-бронирование кинотеатра'
+  next()
 })
 
 export default router
