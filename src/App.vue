@@ -1,85 +1,69 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+import { antdTheme } from '@/theme.ts'
+import {
+  EnvironmentOutlined,
+  CarryOutOutlined,
+  VideoCameraOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons-vue'
+import { ref } from 'vue'
+
+const selectedKeys = ref<string[]>(['1'])
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <a-config-provider :theme="antdTheme">
+    <a-layout class="layout">
+      <a-layout-sider>
+        <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+          <a-menu-item key="1">
+            <video-camera-outlined />
+            <span>Фильмы</span>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <environment-outlined />
+            <span>Кинотеатры</span>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <carry-out-outlined />
+            <span>Мои билеты</span>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <login-outlined />
+            <span>Вход</span>
+          </a-menu-item>
+          <a-menu-item key="5">
+            <logout-outlined />
+            <span>Выход</span>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-sider>
+      <a-layout-content class="layout-content">
+        <RouterView />
+      </a-layout-content>
+    </a-layout>
+  </a-config-provider>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.layout {
+  height: 100vh;
   max-height: 100vh;
+  min-width: 1024px;
+  overflow: auto;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.layout-content {
+  padding: 24px;
+  background-image:
+    linear-gradient(rgb(256 149 0 / 100%), rgb(256 149 0 / 50%), rgb(0 0 0 / 50%)),
+    url('@/assets/bg.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  height: 100vh;
+  overflow: auto;
 }
 </style>
