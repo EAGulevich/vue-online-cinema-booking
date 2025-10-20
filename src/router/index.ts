@@ -19,7 +19,7 @@ const router = createRouter({
       name: 'old-home',
       component: OldHomeView,
       meta: {
-        title: 'sdafadsfа',
+        title: 'Тест',
       },
     },
     {
