@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useGetMovies } from '@/generated/movies/movies.ts'
 import { useRouter } from 'vue-router'
 import { getTableLocaleEmptyMessage } from '@/utils/getTableLocaleEmptyMessage.ts'
 import { getColumns } from '@/views/MoviesView/getColumns.ts'
+import { useGetAllMovies } from '@/composables/useGetAllMovies.ts'
 
-const { data, isLoading, isError } = useGetMovies()
+const { movies, moviesQueryDetails } = useGetAllMovies()
 
 const router = useRouter()
 
@@ -17,10 +17,15 @@ const columns = getColumns({ onGoToFilm })
 
 <template>
   <a-table
-    :dataSource="data?.data"
+    :dataSource="movies"
     :columns="columns"
     :pagination="false"
-    :locale="getTableLocaleEmptyMessage({ isLoading: isLoading, isError: isError })"
+    :locale="
+      getTableLocaleEmptyMessage({
+        isLoading: moviesQueryDetails.isLoading.value,
+        isError: moviesQueryDetails.isError.value,
+      })
+    "
   />
 </template>
 

@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import Antd from 'ant-design-vue'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
-
+import { createHead } from '@unhead/vue/client'
 import App from './App.vue'
 import router from './router'
 
@@ -19,7 +19,8 @@ const queryClient = new QueryClient({
 })
 
 const app = createApp(App)
-
+const head = createHead()
+app.use(head)
 app.use(createPinia())
 app.use(router)
 app.use(Antd)

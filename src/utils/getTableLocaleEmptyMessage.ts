@@ -26,9 +26,16 @@ export const getTableLocaleEmptyMessage = ({
       : h(InboxOutlined, { style: iconsStyle })
 
   return {
-    emptyText: h(Flex, { gap: 'middle', justify: 'center', align: 'center' }, [
-      icon,
-      h(TypographyText, null, text),
-    ]),
+    emptyText: h(
+      Flex,
+      {
+        gap: 'middle',
+        justify: 'center',
+        align: 'center',
+      },
+      {
+        default: () => [icon, h(TypographyText, {}, { default: () => text })],
+      },
+    ),
   }
 }

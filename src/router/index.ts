@@ -1,45 +1,59 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import OldHomeView from '@/views/old/OldHomeView.vue'
-import TestView from '@/views/old/TestView.vue'
-import MoviesView from '@/views/MoviesView/MoviesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      redirect: '/movies',
+    },
+    {
+      path: '/movies',
       name: 'movies',
-      component: MoviesView,
+      component: () => import('@/views/MoviesView/MoviesView.vue'),
       meta: {
         title: 'Фильмы - Онлайн-бронирование кинотеатра',
       },
     },
     {
-      path: '/old-home',
-      name: 'old-home',
-      component: OldHomeView,
+      path: '/movies/:id',
+      name: 'movie',
+      component: () => import('@/views/MovieView/MovieView.vue'),
+    },
+    {
+      path: '/cinemas',
+      name: 'cinemas',
+      component: () => import('@/views/CinemasView/CinemasView.vue'),
       meta: {
-        title: 'Тест',
+        title: 'Кинотеатры - Онлайн-бронирование кинотеатра',
       },
     },
     {
-      path: '/test',
-      name: 'test',
-      component: TestView,
+      path: '/cinemas/:id',
+      name: 'cinema',
+      component: () => import('@/views/CinemaView/CinemaView.vue'),
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/old/AboutView.vue'),
+      path: '/bookings/:id',
+      name: 'bookings',
+      component: () => import('@/views/BookingView/BookingView.vue'),
+    },
+    {
+      path: '/tickets',
+      name: 'tickets',
+      component: () => import('@/views/TicketsView/TicketsView.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView/LoginView.vue'),
     },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = (to.meta.title as string) ?? 'Онлайн-бронирование кинотеатра'
+  // document.title = (to.meta.title as string) ?? 'Онлайн-бронирование кинотеатра'
+
   next()
 })
 

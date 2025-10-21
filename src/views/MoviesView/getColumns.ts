@@ -54,7 +54,7 @@ export const getColumns = ({ onGoToFilm }: GetColumnsProps): TableColumnsType<Re
         {
           color: record.rating > 9 ? 'gold' : undefined,
         },
-        `${record.rating}.0`.slice(0, 3),
+        { default: () => `${record.rating}.0`.slice(0, 3) },
       ),
   },
   {
@@ -68,7 +68,7 @@ export const getColumns = ({ onGoToFilm }: GetColumnsProps): TableColumnsType<Re
         {
           onClick: () => onGoToFilm(record.id),
         },
-        'Посмотреть сеансы',
+        { default: () => 'Посмотреть сеансы' },
       ),
   },
 ]

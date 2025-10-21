@@ -1,47 +1,103 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 import { antdTheme } from '@/theme.ts'
 import {
-  EnvironmentOutlined,
   CarryOutOutlined,
-  VideoCameraOutlined,
+  EnvironmentOutlined,
   LoginOutlined,
   LogoutOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons-vue'
-import { ref } from 'vue'
+import { computed, h, onMounted, ref, watch } from 'vue'
+import LoadingBlock from '@/components/LoadingBlock.vue'
+import { useSettingsData } from '@/composables/useSettingsData.ts'
+import type { MenuProps } from 'ant-design-vue'
 
-const selectedKeys = ref<string[]>(['1'])
+const router = useRouter()
+const route = useRoute()
+
+const selectedKeys = ref<string[]>([])
+
+onMounted(() => {
+  selectedKeys.value = ['/' + route.path.split('/')[1]]
+})
+
+watch(
+  () => route.path,
+  (newPath) => {
+    selectedKeys.value = ['/' + newPath.split('/')[1]]
+  },
+)
+
+const isRouteLoading = ref(false)
+
+router.beforeEach(() => {
+  isRouteLoading.value = true
+})
+
+router.afterEach(() => {
+  isRouteLoading.value = false
+})
+
+const siderStyle = { backgroundColor: '#141414' }
+
+const settingsData = useSettingsData()
+const isAuthorized = computed(() => !!settingsData.token.value)
+
+const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+  if (isAuthorized.value && key === '/login') {
+    settingsData.onLogout()
+    router.push('/movies')
+  } else if (!isAuthorized.value && key === '/tickets') {
+    router.push('/login')
+  } else {
+    router.push(key.toString())
+  }
+}
+
+const menuItems = computed(() => {
+  const items: MenuProps['items'] = [
+    {
+      key: '/movies',
+      icon: () => h(VideoCameraOutlined),
+      label: 'Фильмы',
+    },
+    {
+      key: '/cinemas',
+      icon: () => h(EnvironmentOutlined),
+      label: 'Кинотеатры',
+    },
+    {
+      key: '/tickets',
+      icon: () => h(CarryOutOutlined),
+      label: 'Мои билеты',
+    },
+    {
+      key: '/login',
+      icon: () => (isAuthorized.value ? h(LogoutOutlined) : h(LoginOutlined)),
+      label: isAuthorized.value ? 'Выход' : 'Вход',
+    },
+  ]
+  return items
+})
 </script>
 
 <template>
   <a-config-provider :theme="antdTheme">
     <a-layout class="layout">
-      <a-layout-sider>
-        <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-          <a-menu-item key="1">
-            <video-camera-outlined />
-            <span>Фильмы</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <environment-outlined />
-            <span>Кинотеатры</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <carry-out-outlined />
-            <span>Мои билеты</span>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <login-outlined />
-            <span>Вход</span>
-          </a-menu-item>
-          <a-menu-item key="5">
-            <logout-outlined />
-            <span>Выход</span>
-          </a-menu-item>
-        </a-menu>
+      <a-layout-sider theme="dark" :style="siderStyle">
+        <a-menu
+          :selectedKeys="selectedKeys"
+          theme="dark"
+          mode="inline"
+          :style="siderStyle"
+          :items="menuItems"
+          @click="handleMenuClick"
+        />
       </a-layout-sider>
       <a-layout-content class="layout-content">
-        <RouterView />
+        <LoadingBlock v-if="isRouteLoading" tip="Страница загружается" />
+        <RouterView v-else />
       </a-layout-content>
     </a-layout>
   </a-config-provider>
